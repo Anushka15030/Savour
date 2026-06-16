@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found — Savour</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>" />
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .not-found { text-align: center; max-width: 480px; padding: 2rem; }
+    .not-found .big-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 8rem;
+      font-weight: 700;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .not-found h2 { font-size: 1.75rem; margin-bottom: 0.75rem; }
+    .not-found p { color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 600;
+      transition: var(--transition);
+      margin-right: 0.75rem;
+    }
+    .btn-home:hover { background: var(--primary-light); }
+    .btn-recipes {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--accent);
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 600;
+      border: 2px solid var(--accent);
+      transition: var(--transition);
+    }
+    .btn-recipes:hover { background: var(--accent); color: white; }
+  </style>
+</head>
+<body>
+  <div class="not-found">
+    <div class="big-num">404</div>
+    <div style="font-size:3rem;margin-bottom:1rem">🍽️</div>
+    <h2>This page is off the menu</h2>
+    <p>Looks like the page you're looking for doesn't exist — maybe it moved, or you followed a stale link.</p>
+    <div>
+      <a href="index.html" class="btn-home">← Go Home</a>
+      <a href="recipes.html" class="btn-recipes">Browse Recipes</a>
+    </div>
+  </div>
+</body>
+</html>

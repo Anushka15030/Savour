@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe — Savour</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🍽</div>
+    Savour
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="recipes.html">Recipes</a></li>
+    <li><a href="favorites.html">Favorites</a></li>
+    <li><a href="create.html">Add Recipe</a></li>
+    <li><a href="index.html#about">About</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div id="authButtons" style="display:flex;gap:0.75rem;align-items:center">
+      <button class="btn-login" onclick="openLoginModal()">Log In</button>
+      <button class="btn-signup" onclick="openSignupModal()">Sign Up</button>
+    </div>
+    <div class="user-menu" id="userMenu" style="display:none">
+      <button class="user-avatar-btn" id="userAvatarBtn">
+        <span id="userInitial">U</span>
+      </button>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-info">
+          <div class="user-name" id="dropdownUserName">User</div>
+          <div class="user-email" id="dropdownUserEmail">user@email.com</div>
+        </div>
+        <a href="favorites.html" class="dropdown-item">❤️ My Favorites</a>
+        <a href="create.html" class="dropdown-item">➕ Add Recipe</a>
+        <a href="recipes.html" class="dropdown-item">🍴 All Recipes</a>
+        <button class="dropdown-item logout" id="logoutBtn">↩ Log Out</button>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     RECIPE HERO IMAGE
+═══════════════════════════════════════════════════════════════ -->
+<div class="recipe-detail-hero" id="recipeHero">
+  <img id="recipeHeroImg" src="" alt="" />
+  <div class="recipe-detail-hero-content container">
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
+      <a href="recipes.html" style="color:rgba(255,255,255,0.75);font-size:0.875rem;display:flex;align-items:center;gap:0.35rem">
+        ← All Recipes
+      </a>
+      <span style="color:rgba(255,255,255,0.4)">|</span>
+      <span id="recipeCategoryBadge" style="background:var(--accent);color:white;font-size:0.72rem;font-weight:600;padding:0.2rem 0.65rem;border-radius:100px;text-transform:uppercase;letter-spacing:0.05em"></span>
+    </div>
+    <h1 id="recipeHeroTitle">Loading…</h1>
+    <div class="recipe-hero-meta" id="recipeHeroMeta">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     RECIPE DETAIL LAYOUT
+═══════════════════════════════════════════════════════════════ -->
+<div class="container">
+  <div class="recipe-detail-layout" id="recipeDetailLayout">
+
+    <!-- LEFT — Main content -->
+    <div class="recipe-detail-main">
+
+      <!-- Description -->
+      <div class="detail-section" id="recipeDescSection">
+        <p id="recipeDescription" style="font-size:1rem;line-height:1.8;color:var(--text-muted)">Loading description…</p>
+      </div>
+
+      <!-- Ingredients -->
+      <div class="detail-section">
+        <h2>🥕 Ingredients</h2>
+        <div class="ingredients-list" id="ingredientsList">
+          <div class="skeleton skeleton-line" style="height:14px;margin-bottom:8px"></div>
+          <div class="skeleton skeleton-line medium" style="height:14px;margin-bottom:8px"></div>
+          <div class="skeleton skeleton-line short" style="height:14px"></div>
+        </div>
+      </div>
+
+      <!-- Instructions -->
+      <div class="detail-section">
+        <h2>👨‍🍳 Instructions</h2>
+        <div class="instructions-list" id="instructionsList">
+          <div class="skeleton skeleton-line" style="height:50px;margin-bottom:8px;border-radius:8px"></div>
+          <div class="skeleton skeleton-line" style="height:50px;border-radius:8px"></div>
+        </div>
+      </div>
+
+      <!-- Reviews & Comments -->
+      <div class="reviews-section" id="reviewsSection">
+        <h2>💬 Reviews <span id="reviewCount" style="font-size:1rem;font-weight:400;color:var(--text-muted)"></span></h2>
+
+        <!-- Review form — hidden until logged in -->
+        <div class="review-form" id="reviewFormWrapper">
+          <h3>Share your experience</h3>
+          <div class="star-rating-input" id="starInput">
+            <button type="button" data-val="1" onclick="setStarRating(1)">★</button>
+            <button type="button" data-val="2" onclick="setStarRating(2)">★</button>
+            <button type="button" data-val="3" onclick="setStarRating(3)">★</button>
+            <button type="button" data-val="4" onclick="setStarRating(4)">★</button>
+            <button type="button" data-val="5" onclick="setStarRating(5)">★</button>
+          </div>
+          <textarea id="reviewComment" placeholder="Write your review here — what did you love? Any tips for others?"></textarea>
+          <p class="form-error" id="reviewError"></p>
+          <button class="btn-submit-review" onclick="submitReview()">Post Review</button>
+        </div>
+
+        <!-- Login prompt for reviews (shown to guests) -->
+        <div id="reviewLoginPrompt" style="display:none;background:var(--bg);padding:1rem;border-radius:var(--radius-sm);margin-bottom:1.5rem;font-size:0.875rem;color:var(--text-muted)">
+          <a href="#" onclick="openLoginModal()" style="color:var(--accent);font-weight:600">Log in</a> to leave a review.
+        </div>
+
+        <!-- Reviews list -->
+        <div id="reviewsList">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — Sidebar -->
+    <div class="recipe-detail-sidebar">
+      <div class="sidebar-card">
+        <h3>Recipe Details</h3>
+        <div class="recipe-stats-grid" id="recipeStatsGrid">
+          <div class="recipe-stat-box">
+            <div class="stat-value" id="statTime">—</div>
+            <div class="stat-label">Cook Time</div>
+          </div>
+          <div class="recipe-stat-box">
+            <div class="stat-value" id="statServings">—</div>
+            <div class="stat-label">Servings</div>
+          </div>
+          <div class="recipe-stat-box">
+            <div class="stat-value" id="statRating">—</div>
+            <div class="stat-label">Rating</div>
+          </div>
+          <div class="recipe-stat-box">
+            <div class="stat-value" id="statDifficulty">—</div>
+            <div class="stat-label">Difficulty</div>
+          </div>
+        </div>
+
+        <!-- Favorite button -->
+        <button class="btn-fav-main" id="mainFavBtn" onclick="handleMainFav()">
+          🤍 Add to Favorites
+        </button>
+      </div>
+
+      <!-- Tags card -->
+      <div class="sidebar-card" id="tagsCard" style="display:none">
+        <h3>Tags</h3>
+        <div id="tagsList" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem"></div>
+      </div>
+
+      <!-- Share card -->
+      <div class="sidebar-card">
+        <h3>Share Recipe</h3>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">Know a food lover? Share this recipe!</p>
+        <button class="btn-fav-main" style="background:var(--primary);margin:0" onclick="shareRecipe()">
+          📤 Copy Link
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- More from this category -->
+<section style="background:var(--bg-alt);padding:4rem 0;">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="section-label">You Might Also Like</span>
+        <h2 class="section-title" style="font-size:1.6rem">More Recipes</h2>
+      </div>
+      <a href="recipes.html" class="view-all-link">All Recipes →</a>
+    </div>
+    <div class="recipes-grid" id="relatedGrid" style="grid-template-columns:repeat(3,1fr)">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <a href="index.html" class="nav-logo" style="color:rgba(255,255,255,0.7)"><div class="logo-icon">🍽</div>Savour</a>
+      <span>© 2025 Savour. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Auth Modal -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" id="closeModal">✕</button>
+    <h2>Welcome back</h2>
+    <p class="modal-sub">Log in to save your favorite recipes.</p>
+    <form id="loginForm">
+      <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" required /></div>
+      <p class="form-error" id="loginError"></p>
+      <button type="submit" class="btn-submit-form">Sign In</button>
+      <div class="modal-switch">Don't have an account? <a id="switchToSignup">Sign up free</a></div>
+    </form>
+    <form id="signupForm" style="display:none">
+      <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="Jane Smith" required /></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="you@example.com" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="signupPassword" placeholder="Min. 6 characters" required /></div>
+      <p class="form-error" id="signupError"></p>
+      <button type="submit" class="btn-submit-form">Create Account</button>
+      <div class="modal-switch">Already have an account? <a id="switchToLogin">Log in</a></div>
+    </form>
+  </div>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">↑</button>
+
+<script src="script.js"></script>
+<script>
+  // ── RECIPE DETAIL PAGE LOGIC ───────────────────────────────────
+
+  let currentRecipe = null;
+  let selectedRating = 0;
+  const recipeId = new URLSearchParams(window.location.search).get('id');
+
+  if (!recipeId) {
+    window.location.href = 'recipes.html';
+  }
+
+  // Load recipe
+  async function loadRecipe() {
+    try {
+      const data = await API.get(`/recipes/${recipeId}`);
+      currentRecipe = data.recipe;
+      renderRecipe(currentRecipe);
+      loadRelatedRecipes(currentRecipe.category, currentRecipe._id);
+    } catch (err) {
+      document.getElementById('recipeHeroTitle').textContent = 'Recipe not found';
+      Toast.show('Failed to load recipe: ' + err.message, 'error');
+    }
+  }
+
+  function renderRecipe(r) {
+    // Update page title
+    document.title = `${r.title} — Savour`;
+
+    // Hero
+    document.getElementById('recipeHeroImg').src = r.image;
+    document.getElementById('recipeHeroImg').alt = r.title;
+    document.getElementById('recipeHeroTitle').textContent = r.title;
+    document.getElementById('recipeCategoryBadge').textContent = r.category;
+
+    // Hero meta
+    document.getElementById('recipeHeroMeta').innerHTML = `
+      <div class="recipe-hero-meta-item">⭐ <span>${r.averageRating ? r.averageRating.toFixed(1) : 'No ratings'}</span> (${r.totalReviews} reviews)</div>
+      <div class="recipe-hero-meta-item">⏱ <span>${formatTime(r.cookingTime)}</span></div>
+      <div class="recipe-hero-meta-item">👥 <span>${r.servings} servings</span></div>
+      <div class="recipe-hero-meta-item">📊 <span>${r.difficulty}</span></div>
+    `;
+
+    // Description
+    document.getElementById('recipeDescription').textContent = r.description;
+
+    // Stats sidebar
+    document.getElementById('statTime').textContent = formatTime(r.cookingTime);
+    document.getElementById('statServings').textContent = r.servings;
+    document.getElementById('statRating').textContent = r.averageRating ? r.averageRating.toFixed(1) + '⭐' : '—';
+    document.getElementById('statDifficulty').textContent = r.difficulty;
+
+    // Favorite button state
+    const isFav = Auth.isFavorite(r._id);
+    const mainFavBtn = document.getElementById('mainFavBtn');
+    mainFavBtn.dataset.id = r._id;
+    mainFavBtn.classList.toggle('active', isFav);
+    mainFavBtn.innerHTML = isFav ? '❤️ Saved to Favorites' : '🤍 Add to Favorites';
+
+    // Ingredients
+    document.getElementById('ingredientsList').innerHTML = r.ingredients.map(ing => `
+      <div class="ingredient-item">
+        <div class="ingredient-dot"></div>
+        <span class="ingredient-amount">${ing.amount || ''} ${ing.unit || ''}</span>
+        <span class="ingredient-name">${ing.name}</span>
+      </div>`).join('');
+
+    // Instructions
+    document.getElementById('instructionsList').innerHTML = r.instructions.map(step => `
+      <div class="instruction-step">
+        <div class="step-number">${step.step}</div>
+        <div class="step-text">${step.description}</div>
+      </div>`).join('');
+
+    // Tags
+    if (r.tags && r.tags.length > 0) {
+      document.getElementById('tagsCard').style.display = 'block';
+      document.getElementById('tagsList').innerHTML = r.tags.map(tag => `
+        <a href="recipes.html?search=${encodeURIComponent(tag)}" style="background:var(--bg-alt);color:var(--text-muted);font-size:0.78rem;padding:0.3rem 0.75rem;border-radius:100px;border:1px solid var(--border);transition:var(--transition)">
+          #${tag}
+        </a>`).join('');
+    }
+
+    // Reviews
+    renderReviews(r.reviews);
+    updateReviewFormVisibility();
+  }
+
+  function renderReviews(reviews) {
+    const list = document.getElementById('reviewsList');
+    const countEl = document.getElementById('reviewCount');
+    countEl.textContent = `(${reviews.length})`;
+
+    if (reviews.length === 0) {
+      list.innerHTML = '<div class="empty-state" style="padding:2rem 0"><div class="empty-icon">💬</div><p>No reviews yet. Be the first to share your thoughts!</p></div>';
+      return;
+    }
+
+    list.innerHTML = reviews.slice().reverse().map(r => `
+      <div class="review-item">
+        <div class="review-header">
+          <div class="reviewer-info">
+            <div class="reviewer-avatar">${r.userName.charAt(0).toUpperCase()}</div>
+            <div>
+              <div class="reviewer-name">${r.userName}</div>
+              <div class="review-date">${new Date(r.createdAt).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })}</div>
+            </div>
+          </div>
+          <div class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+        </div>
+        <p class="review-text">${r.comment}</p>
+      </div>`).join('');
+  }
+
+  function updateReviewFormVisibility() {
+    const formWrapper = document.getElementById('reviewFormWrapper');
+    const loginPrompt = document.getElementById('reviewLoginPrompt');
+    if (Auth.isLoggedIn()) {
+      formWrapper.style.display = 'block';
+      loginPrompt.style.display = 'none';
+    } else {
+      formWrapper.style.display = 'none';
+      loginPrompt.style.display = 'block';
+    }
+  }
+
+  // Star rating
+  function setStarRating(val) {
+    selectedRating = val;
+    document.querySelectorAll('#starInput button').forEach((btn, i) => {
+      btn.classList.toggle('active', i < val);
+    });
+  }
+
+  // Submit review
+  async function submitReview() {
+    const comment = document.getElementById('reviewComment').value.trim();
+    const errEl = document.getElementById('reviewError');
+    errEl.classList.remove('show');
+
+    if (!selectedRating) {
+      errEl.textContent = 'Please select a star rating.';
+      errEl.classList.add('show');
+      return;
+    }
+    if (!comment) {
+      errEl.textContent = 'Please write a review comment.';
+      errEl.classList.add('show');
+      return;
+    }
+    if (comment.length < 10) {
+      errEl.textContent = 'Review must be at least 10 characters.';
+      errEl.classList.add('show');
+      return;
+    }
+
+    try {
+      const data = await API.authPost(`/recipes/${recipeId}/reviews`, { rating: selectedRating, comment });
+      currentRecipe = data.recipe;
+      renderReviews(data.recipe.reviews);
+
+      // Update rating stats
+      document.getElementById('statRating').textContent = data.recipe.averageRating.toFixed(1) + '⭐';
+      document.getElementById('reviewComment').value = '';
+      setStarRating(0);
+      selectedRating = 0;
+
+      Toast.show('Review posted! Thank you 🌟', 'success');
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.classList.add('show');
+    }
+  }
+
+  // Main favorite button
+  async function handleMainFav() {
+    if (!Auth.isLoggedIn()) {
+      Toast.show('Please log in to save favorites', 'info');
+      openLoginModal();
+      return;
+    }
+    const btn = document.getElementById('mainFavBtn');
+    await toggleFavorite(btn, recipeId);
+  }
+
+  // Share recipe
+  function shareRecipe() {
+    navigator.clipboard.writeText(window.location.href);
+    Toast.show('Link copied to clipboard! 📋', 'success');
+  }
+
+  // Load related recipes
+  async function loadRelatedRecipes(category, excludeId) {
+    const grid = document.getElementById('relatedGrid');
+    try {
+      const data = await API.get(`/recipes?category=${category}&limit=3`);
+      const related = data.recipes.filter(r => r._id !== excludeId).slice(0, 3);
+      if (related.length === 0) {
+        grid.parentElement.parentElement.style.display = 'none';
+        return;
+      }
+      grid.innerHTML = related.map(buildRecipeCard).join('');
+    } catch (e) {
+      grid.parentElement.parentElement.style.display = 'none';
+    }
+  }
+
+  // Re-render when auth changes
+  function onAuthChange() {
+    updateReviewFormVisibility();
+    if (currentRecipe) {
+      const isFav = Auth.isFavorite(currentRecipe._id);
+      const btn = document.getElementById('mainFavBtn');
+      btn.classList.toggle('active', isFav);
+      btn.innerHTML = isFav ? '❤️ Saved to Favorites' : '🤍 Add to Favorites';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadRecipe);
+</script>
+</body>
+</html>

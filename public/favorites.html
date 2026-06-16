@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Favorites — Savour</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>" />
+  <style>
+    .favorites-hero {
+      background: linear-gradient(135deg, #2D5016 0%, #3D6B20 50%, #4a7a28 100%);
+      padding: 8rem 0 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .favorites-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .favorites-hero h1 { color: white; position: relative; z-index: 1; font-size: clamp(2rem, 5vw, 3rem); }
+    .favorites-hero p { color: rgba(255,255,255,0.75); position: relative; z-index: 1; margin-top: 0.75rem; }
+
+    .profile-strip {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 0;
+    }
+    .profile-strip .inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .profile-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+    }
+    .profile-name { font-weight: 700; font-size: 1rem; color: var(--text); }
+    .profile-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+    .favorites-page-content { padding: 3rem 0 6rem; }
+
+    .fav-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .fav-count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(45,80,22,0.1);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      margin-left: 0.75rem;
+    }
+
+    /* Guest wall */
+    .guest-wall {
+      text-align: center;
+      padding: 6rem 2rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .guest-wall .wall-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+    .guest-wall h2 {
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+    }
+    .guest-wall p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .guest-wall-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-wall-primary {
+      background: var(--accent);
+      color: white;
+      padding: 0.8rem 1.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .btn-wall-primary:hover { background: var(--accent-light); }
+    .btn-wall-secondary {
+      background: transparent;
+      color: var(--primary);
+      padding: 0.8rem 1.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: 2px solid var(--primary);
+      transition: var(--transition);
+    }
+    .btn-wall-secondary:hover { background: var(--primary); color: white; }
+
+    /* Empty favorites */
+    .empty-favorites {
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+    .empty-favorites .big-icon { font-size: 4rem; margin-bottom: 1.25rem; display: block; }
+    .empty-favorites h2 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .empty-favorites p { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .btn-browse {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.8rem 1.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .btn-browse:hover { background: var(--primary-light); }
+
+    /* Search within favorites */
+    .fav-search {
+      position: relative;
+      max-width: 320px;
+    }
+    .fav-search .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .fav-search input {
+      width: 100%;
+      padding: 0.6rem 0.9rem 0.6rem 2.4rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      color: var(--text);
+      background: var(--card-bg);
+      outline: none;
+      transition: var(--transition);
+    }
+    .fav-search input:focus { border-color: var(--primary); }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🍽</div>
+    Savour
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="recipes.html">Recipes</a></li>
+    <li><a href="favorites.html" class="active">Favorites</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div id="authButtons" style="display:flex;gap:0.75rem;align-items:center">
+      <button class="btn-login" onclick="openLoginModal()">Log In</button>
+      <button class="btn-signup" onclick="openSignupModal()">Sign Up</button>
+    </div>
+    <div class="user-menu" id="userMenu" style="display:none">
+      <button class="user-avatar-btn" id="userAvatarBtn">
+        <span id="userInitial">U</span>
+      </button>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-info">
+          <div class="user-name" id="dropdownUserName">User</div>
+          <div class="user-email" id="dropdownUserEmail">user@email.com</div>
+        </div>
+        <a href="favorites.html" class="dropdown-item">❤️ My Favorites</a>
+        <a href="create.html" class="dropdown-item">➕ Add Recipe</a>
+        <button class="dropdown-item logout" id="logoutBtn">↩ Log Out</button>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="favorites-hero">
+  <div class="container">
+    <h1>❤️ My Favorites</h1>
+    <p id="favHeroSub">Your personal recipe collection</p>
+  </div>
+</div>
+
+<!-- PROFILE STRIP (shown when logged in) -->
+<div class="profile-strip" id="profileStrip" style="display:none">
+  <div class="container inner">
+    <div class="profile-info">
+      <div class="profile-avatar" id="profileAvatar">U</div>
+      <div>
+        <div class="profile-name" id="profileName">—</div>
+        <div class="profile-meta" id="profileMeta">0 saved recipes</div>
+      </div>
+    </div>
+    <a href="create.html" style="display:flex;align-items:center;gap:0.5rem;background:var(--primary);color:white;padding:0.6rem 1.25rem;border-radius:var(--radius-sm);font-size:0.875rem;font-weight:600;transition:var(--transition)">
+      ➕ Add New Recipe
+    </a>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="favorites-page-content">
+  <div class="container">
+
+    <!-- Guest wall: shown to non-logged-in users -->
+    <div id="guestWall" style="display:none">
+      <div class="guest-wall">
+        <span class="wall-icon">🔒</span>
+        <h2>Save Your Favorite Recipes</h2>
+        <p>Create a free account to build your personal recipe collection. Heart any recipe to save it here for quick access.</p>
+        <div class="guest-wall-btns">
+          <button class="btn-wall-primary" onclick="openSignupModal()">Create Free Account</button>
+          <button class="btn-wall-secondary" onclick="openLoginModal()">Log In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorites content: shown when logged in -->
+    <div id="favContent" style="display:none">
+      <div class="fav-section-header">
+        <div style="display:flex;align-items:center">
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem">Saved Recipes</h2>
+          <span class="fav-count-badge" id="favCountBadge">0 recipes</span>
+        </div>
+        <div class="fav-search">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="favSearchInput" placeholder="Filter favorites…" />
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="emptyFavorites" style="display:none">
+        <div class="empty-favorites">
+          <span class="big-icon">🤍</span>
+          <h2>No favorites yet</h2>
+          <p>Browse our recipes and tap the heart icon to save ones you love. They'll all appear here.</p>
+          <a href="recipes.html" class="btn-browse">Browse Recipes →</a>
+        </div>
+      </div>
+
+      <!-- Grid of favorited recipes -->
+      <div class="recipes-grid" id="favGrid" style="grid-template-columns:repeat(3,1fr)"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <a href="index.html" class="nav-logo" style="color:rgba(255,255,255,0.7)"><div class="logo-icon">🍽</div>Savour</a>
+      <span>© 2025 Savour. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Auth Modal -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" id="closeModal">✕</button>
+    <h2>Welcome back</h2>
+    <p class="modal-sub">Log in to see your saved recipes.</p>
+    <form id="loginForm">
+      <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" required /></div>
+      <p class="form-error" id="loginError"></p>
+      <button type="submit" class="btn-submit-form">Sign In</button>
+      <div class="modal-switch">Don't have an account? <a id="switchToSignup">Sign up free</a></div>
+    </form>
+    <form id="signupForm" style="display:none">
+      <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="Jane Smith" required /></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="you@example.com" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="signupPassword" placeholder="Min. 6 characters" required /></div>
+      <p class="form-error" id="signupError"></p>
+      <button type="submit" class="btn-submit-form">Create Account</button>
+      <div class="modal-switch">Already have an account? <a id="switchToLogin">Log in</a></div>
+    </form>
+  </div>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">↑</button>
+
+<script src="script.js"></script>
+<script>
+  // ── FAVORITES PAGE ─────────────────────────────────────────────
+  let allFavorites = [];
+
+  async function initFavoritesPage() {
+    if (!Auth.isLoggedIn()) {
+      document.getElementById('guestWall').style.display = 'block';
+      document.getElementById('favContent').style.display = 'none';
+      document.getElementById('profileStrip').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('guestWall').style.display = 'none';
+    document.getElementById('favContent').style.display = 'block';
+    document.getElementById('profileStrip').style.display = 'block';
+
+    await loadFavorites();
+  }
+
+  async function loadFavorites() {
+    const grid = document.getElementById('favGrid');
+    const emptyEl = document.getElementById('emptyFavorites');
+    grid.innerHTML = buildSkeletonCards(3);
+
+    try {
+      const data = await API.authGet('/auth/me');
+      const user = data.user;
+
+      // Update profile strip
+      document.getElementById('profileAvatar').textContent = user.name.charAt(0).toUpperCase();
+      document.getElementById('profileName').textContent = user.name;
+      document.getElementById('profileMeta').textContent = `${user.favorites.length} saved recipe${user.favorites.length !== 1 ? 's' : ''}`;
+      document.getElementById('favCountBadge').textContent = `${user.favorites.length} recipe${user.favorites.length !== 1 ? 's' : ''}`;
+      document.getElementById('favHeroSub').textContent = `${user.favorites.length} recipe${user.favorites.length !== 1 ? 's' : ''} saved, ${user.name}`;
+
+      // Update local auth cache
+      Auth.setSession(Auth.getToken(), user);
+      allFavorites = user.favorites;
+
+      if (user.favorites.length === 0) {
+        grid.innerHTML = '';
+        emptyEl.style.display = 'block';
+        return;
+      }
+
+      emptyEl.style.display = 'none';
+      renderFavGrid(allFavorites);
+    } catch (err) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⚠️</div><h3>Failed to load</h3><p>${err.message}</p></div>`;
+    }
+  }
+
+  function renderFavGrid(recipes) {
+    const grid = document.getElementById('favGrid');
+    if (!recipes || recipes.length === 0) {
+      grid.innerHTML = '';
+      return;
+    }
+    grid.innerHTML = recipes.map(r => buildRecipeCard(r)).join('');
+  }
+
+  // Live filter within favorites
+  document.getElementById('favSearchInput')?.addEventListener('input', (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) {
+      renderFavGrid(allFavorites);
+      return;
+    }
+    const filtered = allFavorites.filter(r =>
+      r.title.toLowerCase().includes(q) ||
+      r.category.toLowerCase().includes(q)
+    );
+    if (filtered.length === 0) {
+      document.getElementById('favGrid').innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="empty-icon">🔍</div>
+          <h3>No matches</h3>
+          <p>No saved recipes match "<strong>${q}</strong>".</p>
+        </div>`;
+    } else {
+      renderFavGrid(filtered);
+    }
+  });
+
+  // Re-init when user logs in
+  function onAuthChange() { initFavoritesPage(); }
+
+  document.addEventListener('DOMContentLoaded', initFavoritesPage);
+</script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Recipes — Savour</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🍽</div>
+    Savour
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="recipes.html" class="active">Recipes</a></li>
+    <li><a href="favorites.html">Favorites</a></li>
+    <li><a href="create.html">Add Recipe</a></li>
+    <li><a href="index.html#about">About</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div id="authButtons" style="display:flex;gap:0.75rem;align-items:center">
+      <button class="btn-login" onclick="openLoginModal()">Log In</button>
+      <button class="btn-signup" onclick="openSignupModal()">Sign Up</button>
+    </div>
+    <div class="user-menu" id="userMenu" style="display:none">
+      <button class="user-avatar-btn" id="userAvatarBtn">
+        <span id="userInitial">U</span>
+      </button>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-info">
+          <div class="user-name" id="dropdownUserName">User</div>
+          <div class="user-email" id="dropdownUserEmail">user@email.com</div>
+        </div>
+        <a href="favorites.html" class="dropdown-item">❤️ My Favorites</a>
+        <a href="create.html" class="dropdown-item">➕ Add Recipe</a>
+        <a href="recipes.html" class="dropdown-item">🍴 All Recipes</a>
+        <button class="dropdown-item logout" id="logoutBtn">↩ Log Out</button>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE HEADER
+═══════════════════════════════════════════════════════════════ -->
+<div class="page-header">
+  <div class="container">
+    <h1>All Recipes</h1>
+    <p>Explore our curated collection of recipes from around the world</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     RECIPES PAGE CONTENT
+═══════════════════════════════════════════════════════════════ -->
+<div class="recipes-page-content">
+  <div class="container">
+
+    <!-- Search & Filters Bar -->
+    <div class="search-filters-bar">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search recipes, ingredients…" aria-label="Search" />
+      </div>
+
+      <select class="filter-select" id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="Indian">Indian</option>
+        <option value="Italian">Italian</option>
+        <option value="Vegan">Vegan</option>
+        <option value="Desserts">Desserts</option>
+        <option value="Chinese">Chinese</option>
+        <option value="Mexican">Mexican</option>
+        <option value="American">American</option>
+        <option value="Mediterranean">Mediterranean</option>
+      </select>
+
+      <select class="filter-select" id="difficultyFilter">
+        <option value="">All Difficulties</option>
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+      </select>
+
+      <select class="filter-select" id="timeFilter">
+        <option value="">Any Time</option>
+        <option value="20">Under 20 min</option>
+        <option value="30">Under 30 min</option>
+        <option value="45">Under 45 min</option>
+        <option value="60">Under 1 hour</option>
+      </select>
+
+      <select class="filter-select" id="ratingFilter">
+        <option value="">Any Rating</option>
+        <option value="4.5">4.5+ ⭐</option>
+        <option value="4">4.0+ ⭐</option>
+        <option value="3">3.0+ ⭐</option>
+      </select>
+
+      <button class="btn-filter-reset" id="resetFilters">✕ Clear</button>
+    </div>
+
+    <!-- Results Info Row -->
+    <div class="results-info">
+      <div class="results-count" id="resultsCount">Loading recipes…</div>
+      <select class="sort-select" id="sortSelect">
+        <option value="createdAt">Newest First</option>
+        <option value="rating">Highest Rated</option>
+        <option value="time">Quickest First</option>
+        <option value="title">A–Z</option>
+      </select>
+    </div>
+
+    <!-- Recipe Grid -->
+    <div class="recipes-grid" id="recipesGrid">
+      <!-- Skeleton placeholders -->
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line short" style="height:10px;margin-bottom:8px"></div><div class="skeleton skeleton-line medium"></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line short" style="height:10px;margin-bottom:8px"></div><div class="skeleton skeleton-line medium"></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line short" style="height:10px;margin-bottom:8px"></div><div class="skeleton skeleton-line medium"></div></div></div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <a href="index.html" class="nav-logo" style="color:rgba(255,255,255,0.7)">
+        <div class="logo-icon">🍽</div>Savour
+      </a>
+      <span>© 2025 Savour. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Auth Modal -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" id="closeModal">✕</button>
+    <h2>Welcome back</h2>
+    <p class="modal-sub">Log in to save your favorite recipes.</p>
+    <form id="loginForm">
+      <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" required /></div>
+      <p class="form-error" id="loginError"></p>
+      <button type="submit" class="btn-submit-form">Sign In</button>
+      <div class="modal-switch">Don't have an account? <a id="switchToSignup">Sign up free</a></div>
+    </form>
+    <form id="signupForm" style="display:none">
+      <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="Jane Smith" required /></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="you@example.com" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="signupPassword" placeholder="Min. 6 characters" required /></div>
+      <p class="form-error" id="signupError"></p>
+      <button type="submit" class="btn-submit-form">Create Account</button>
+      <div class="modal-switch">Already have an account? <a id="switchToLogin">Log in</a></div>
+    </form>
+  </div>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">↑</button>
+
+<script src="script.js"></script>
+<script>
+  // ── RECIPES PAGE LOGIC ─────────────────────────────────────────
+
+  let currentPage = 1;
+  const LIMIT = 9;
+  let debounceTimer;
+
+  // Read URL params on load
+  const urlParams = new URLSearchParams(window.location.search);
+
+  function getFilters() {
+    return {
+      search: document.getElementById('searchInput').value.trim(),
+      category: document.getElementById('categoryFilter').value,
+      difficulty: document.getElementById('difficultyFilter').value,
+      maxTime: document.getElementById('timeFilter').value,
+      minRating: document.getElementById('ratingFilter').value,
+      sort: document.getElementById('sortSelect').value,
+    };
+  }
+
+  async function loadRecipes(page = 1) {
+    const grid = document.getElementById('recipesGrid');
+    const countEl = document.getElementById('resultsCount');
+    currentPage = page;
+
+    const f = getFilters();
+    const params = new URLSearchParams({
+      page,
+      limit: LIMIT,
+      ...(f.search && { search: f.search }),
+      ...(f.category && { category: f.category }),
+      ...(f.difficulty && { difficulty: f.difficulty }),
+      ...(f.maxTime && { maxTime: f.maxTime }),
+      ...(f.minRating && { minRating: f.minRating }),
+      sort: f.sort,
+    });
+
+    // Show skeleton
+    grid.innerHTML = Array(3).fill(`
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton skeleton-line short" style="height:10px;margin-bottom:8px"></div>
+          <div class="skeleton skeleton-line medium"></div>
+        </div>
+      </div>`).join('');
+
+    try {
+      const data = await API.get(`/recipes?${params}`);
+      const { recipes, pagination } = data;
+
+      countEl.innerHTML = `Showing <strong>${recipes.length}</strong> of <strong>${pagination.total}</strong> recipes`;
+
+      if (recipes.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column:1/-1">
+            <div class="empty-icon">🔍</div>
+            <h3>No recipes found</h3>
+            <p>Try adjusting your filters or search term.</p>
+          </div>`;
+        document.getElementById('pagination').innerHTML = '';
+        return;
+      }
+
+      grid.innerHTML = recipes.map(buildRecipeCard).join('');
+      renderPagination(pagination);
+    } catch (err) {
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="empty-icon">⚠️</div>
+          <h3>Failed to load recipes</h3>
+          <p>${err.message}. Is the server running?</p>
+        </div>`;
+    }
+  }
+
+  function renderPagination({ page, totalPages }) {
+    const container = document.getElementById('pagination');
+    if (totalPages <= 1) { container.innerHTML = ''; return; }
+
+    let html = `
+      <button class="page-btn" onclick="loadRecipes(${page - 1})" ${page === 1 ? 'disabled' : ''}>←</button>`;
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= page - 1 && i <= page + 1)) {
+        html += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="loadRecipes(${i})">${i}</button>`;
+      } else if (i === page - 2 || i === page + 2) {
+        html += `<span style="padding:0 0.25rem;color:var(--text-muted)">…</span>`;
+      }
+    }
+
+    html += `<button class="page-btn" onclick="loadRecipes(${page + 1})" ${page === totalPages ? 'disabled' : ''}>→</button>`;
+    container.innerHTML = html;
+  }
+
+  // Filter events with debounce for search
+  document.getElementById('searchInput').addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => loadRecipes(1), 450);
+  });
+
+  ['categoryFilter', 'difficultyFilter', 'timeFilter', 'ratingFilter', 'sortSelect'].forEach(id => {
+    document.getElementById(id).addEventListener('change', () => loadRecipes(1));
+  });
+
+  document.getElementById('resetFilters').addEventListener('click', () => {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('categoryFilter').value = '';
+    document.getElementById('difficultyFilter').value = '';
+    document.getElementById('timeFilter').value = '';
+    document.getElementById('ratingFilter').value = '';
+    document.getElementById('sortSelect').value = 'createdAt';
+    loadRecipes(1);
+  });
+
+  // Apply URL params on load
+  document.addEventListener('DOMContentLoaded', () => {
+    if (urlParams.get('search')) document.getElementById('searchInput').value = urlParams.get('search');
+    if (urlParams.get('category')) document.getElementById('categoryFilter').value = urlParams.get('category');
+    loadRecipes(1);
+  });
+
+  // Refresh fav states when user logs in/out
+  function onAuthChange() { loadRecipes(currentPage); }
+</script>
+</body>
+</html>

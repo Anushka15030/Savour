@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Savour — Discover & Cook Delicious Recipes</title>
+  <meta name="description" content="Find, cook, and share thousands of delicious recipes from around the world." />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Favicon emoji fallback -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🍽</div>
+    Savour
+  </a>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="recipes.html">Recipes</a></li>
+    <li><a href="favorites.html">Favorites</a></li>
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <!-- Shown when NOT logged in -->
+    <div id="authButtons" style="display:flex;gap:0.75rem;align-items:center">
+      <button class="btn-login" onclick="openLoginModal()">Log In</button>
+      <button class="btn-signup" onclick="openSignupModal()">Sign Up</button>
+    </div>
+
+    <!-- Shown when logged in -->
+    <div class="user-menu" id="userMenu" style="display:none">
+      <button class="user-avatar-btn" id="userAvatarBtn">
+        <span id="userInitial">U</span>
+      </button>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-info">
+          <div class="user-name" id="dropdownUserName">User</div>
+          <div class="user-email" id="dropdownUserEmail">user@email.com</div>
+        </div>
+        <a href="favorites.html" class="dropdown-item">❤️ My Favorites</a>
+        <a href="create.html" class="dropdown-item">➕ Add Recipe</a>
+        <a href="recipes.html" class="dropdown-item">🍴 All Recipes</a>
+        <button class="dropdown-item logout" id="logoutBtn">↩ Log Out</button>
+      </div>
+    </div>
+
+    <!-- Hamburger for mobile -->
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     HERO SECTION
+═══════════════════════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">🌿 Fresh Recipes Daily</div>
+      <h1>Cook with <em>Passion,</em><br>Eat with Joy</h1>
+      <p>Discover thousands of hand-crafted recipes from every corner of the world. From quick weeknight dinners to weekend showstoppers.</p>
+
+      <!-- Search bar navigates to recipes page with query -->
+      <div class="hero-search">
+        <input type="text" id="heroSearch" placeholder="Search for recipes, ingredients…" aria-label="Search recipes" />
+        <button onclick="goSearch()">Explore Recipes →</button>
+      </div>
+
+      <!-- Enter key support -->
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          document.getElementById('heroSearch')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') goSearch();
+          });
+        });
+        function goSearch() {
+          const q = document.getElementById('heroSearch').value.trim();
+          window.location.href = q ? `recipes.html?search=${encodeURIComponent(q)}` : 'recipes.html';
+        }
+      </script>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Recipes</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num">8</div>
+          <div class="stat-label">Cuisines</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num">10K+</div>
+          <div class="stat-label">Cooks</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     CATEGORIES SECTION
+═══════════════════════════════════════════════════════════════ -->
+<section class="categories" id="categories">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="section-label">Browse by Cuisine</span>
+        <h2 class="section-title">Explore Categories</h2>
+      </div>
+      <a href="recipes.html" class="view-all-link">All Recipes →</a>
+    </div>
+
+    <div class="categories-grid">
+      <div class="category-card" onclick="window.location.href='recipes.html?category=Indian'">
+        <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600" alt="Indian cuisine" loading="lazy" />
+        <div class="category-overlay">
+          <div class="category-name">Indian</div>
+          <div class="category-count">Spiced & Aromatic</div>
+        </div>
+      </div>
+      <div class="category-card" onclick="window.location.href='recipes.html?category=Italian'">
+        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" alt="Italian cuisine" loading="lazy" />
+        <div class="category-overlay">
+          <div class="category-name">Italian</div>
+          <div class="category-count">Pasta & Perfection</div>
+        </div>
+      </div>
+      <div class="category-card" onclick="window.location.href='recipes.html?category=Vegan'">
+        <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600" alt="Vegan cuisine" loading="lazy" />
+        <div class="category-overlay">
+          <div class="category-name">Vegan</div>
+          <div class="category-count">Plant-Powered</div>
+        </div>
+      </div>
+      <div class="category-card" onclick="window.location.href='recipes.html?category=Desserts'">
+        <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600" alt="Desserts" loading="lazy" />
+        <div class="category-overlay">
+          <div class="category-name">Desserts</div>
+          <div class="category-count">Sweet Endings</div>
+        </div>
+      </div>
+      <div class="category-card" onclick="window.location.href='recipes.html?category=Chinese'">
+        <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600" alt="Chinese cuisine" loading="lazy" />
+        <div class="category-overlay">
+          <div class="category-name">Chinese</div>
+          <div class="category-count">Bold & Fragrant</div>
+        </div>
+      </div>
+      <div class="category-card" onclick="window.location.href='recipes.html?category=Mexican'">
+        <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600" alt="Mexican cuisine" loading="lazy" />
+        <div class="category-overlay">
+          <div class="category-name">Mexican</div>
+          <div class="category-count">Fiesta Flavors</div>
+        </div>
+      </div>
+      <div class="category-card" onclick="window.location.href='recipes.html?category=American'">
+        <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=600" alt="American cuisine" loading="lazy" />
+        <div class="category-overlay">
+          <div class="category-name">American</div>
+          <div class="category-count">Classic Comfort</div>
+        </div>
+      </div>
+      <div class="category-card" onclick="window.location.href='recipes.html?category=Mediterranean'">
+        <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=600" alt="Mediterranean cuisine" loading="lazy" />
+        <div class="category-overlay">
+          <div class="category-name">Mediterranean</div>
+          <div class="category-count">Fresh & Light</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FEATURED RECIPES SECTION
+═══════════════════════════════════════════════════════════════ -->
+<section id="featured">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="section-label">⭐ Editor's Pick</span>
+        <h2 class="section-title">Featured Recipes</h2>
+      </div>
+      <a href="recipes.html" class="view-all-link">View All →</a>
+    </div>
+
+    <!-- Recipe cards injected here -->
+    <div class="recipes-grid" id="featuredGrid">
+      <!-- Skeleton loading -->
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line short" style="height:10px;margin-bottom:8px"></div><div class="skeleton skeleton-line medium"></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line short" style="height:10px;margin-bottom:8px"></div><div class="skeleton skeleton-line medium"></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line short" style="height:10px;margin-bottom:8px"></div><div class="skeleton skeleton-line medium"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ABOUT SECTION
+═══════════════════════════════════════════════════════════════ -->
+<section id="about" style="background: var(--bg-alt);">
+  <div class="container">
+    <div class="about-section">
+      <div class="about-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800" alt="Chef cooking" loading="lazy" />
+      </div>
+      <div class="about-text">
+        <span class="section-label">Our Story</span>
+        <h2 class="section-title">Food is the Language<br>of Love & Culture</h2>
+        <p>Savour was born from a belief that great cooking should be accessible to everyone. We've gathered recipes from passionate home cooks and professional chefs from over 50 countries.</p>
+        <p>Every recipe on our platform is tested, refined, and shared with love. Whether you're a beginner or a seasoned cook, you'll find something to inspire your next meal.</p>
+        <div class="about-features">
+          <div class="about-feature">
+            <div class="feature-icon">✓</div>
+            <span>Tested & verified recipes with step-by-step instructions</span>
+          </div>
+          <div class="about-feature">
+            <div class="feature-icon">✓</div>
+            <span>Community reviews and ratings you can trust</span>
+          </div>
+          <div class="about-feature">
+            <div class="feature-icon">✓</div>
+            <span>Save your favorites and build your personal cookbook</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     CONTACT SECTION
+═══════════════════════════════════════════════════════════════ -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:3rem">
+      <span class="section-label">Get in Touch</span>
+      <h2 class="section-title">We'd Love to Hear From You</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Contact Information</h3>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📧</div>
+          <div>
+            <strong>Email</strong><br>hello@savour.food
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📍</div>
+          <div>
+            <strong>Location</strong><br>Available worldwide — we're online!
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">⏰</div>
+          <div>
+            <strong>Support Hours</strong><br>Mon–Fri, 9am – 6pm IST
+          </div>
+        </div>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div class="form-row" style="margin-bottom:1rem">
+          <div class="form-group" style="margin:0">
+            <label>First Name</label>
+            <input type="text" id="contactFirstName" placeholder="Jane" />
+          </div>
+          <div class="form-group" style="margin:0">
+            <label>Last Name</label>
+            <input type="text" id="contactLastName" placeholder="Smith" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="contactEmail" placeholder="jane@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="contactMessage" placeholder="Tell us about your recipe idea, feedback, or question…"></textarea>
+        </div>
+        <p class="form-error" id="contactError"></p>
+        <button type="submit" class="btn-send">
+          Send Message 📩
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:1rem">
+          <div class="logo-icon">🍽</div>
+          Savour
+        </div>
+        <p>Bringing the world's best recipes to your kitchen — one dish at a time.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="index.html">Home</a>
+        <a href="recipes.html">All Recipes</a>
+        <a href="recipes.html?category=Indian">Indian</a>
+        <a href="recipes.html?category=Italian">Italian</a>
+        <a href="recipes.html?category=Vegan">Vegan</a>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a href="#" onclick="openLoginModal()">Log In</a>
+        <a href="#" onclick="openSignupModal()">Sign Up</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Savour. All rights reserved.</span>
+      <span>Made with ❤️ for food lovers everywhere</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════
+     AUTH MODAL
+═══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" id="closeModal">✕</button>
+    <h2>Welcome back</h2>
+    <p class="modal-sub">Log in to save your favorite recipes.</p>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="loginEmail">Email Address</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" required />
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required />
+      </div>
+      <p class="form-error" id="loginError"></p>
+      <button type="submit" class="btn-submit-form">Sign In</button>
+      <div class="modal-switch">
+        Don't have an account? <a id="switchToSignup">Sign up free</a>
+      </div>
+    </form>
+
+    <!-- SIGNUP FORM (hidden by default) -->
+    <form id="signupForm" style="display:none">
+      <div class="form-group">
+        <label for="signupName">Full Name</label>
+        <input type="text" id="signupName" placeholder="Jane Smith" autocomplete="name" required />
+      </div>
+      <div class="form-group">
+        <label for="signupEmail">Email Address</label>
+        <input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email" required />
+      </div>
+      <div class="form-group">
+        <label for="signupPassword">Password</label>
+        <input type="password" id="signupPassword" placeholder="Min. 6 characters" autocomplete="new-password" required />
+      </div>
+      <p class="form-error" id="signupError"></p>
+      <button type="submit" class="btn-submit-form">Create Account</button>
+      <div class="modal-switch">
+        Already have an account? <a id="switchToLogin">Log in</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Scroll to top button -->
+<button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">↑</button>
+
+<script src="script.js"></script>
+<script>
+  // ── INDEX PAGE SPECIFIC LOGIC ──────────────────────────────────
+
+  // Load featured recipes
+  async function loadFeaturedRecipes() {
+    const grid = document.getElementById('featuredGrid');
+    try {
+      const data = await API.get('/recipes/featured');
+      if (data.recipes.length === 0) {
+        grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🍽️</div><h3>No recipes yet</h3><p>Visit <a href="/api/recipes/seed">/api/recipes/seed</a> to add sample data.</p></div>';
+        return;
+      }
+      grid.innerHTML = data.recipes.map(buildRecipeCard).join('');
+    } catch (err) {
+      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Could not load recipes</h3><p>${err.message}</p></div>`;
+    }
+  }
+
+  // Contact form submission
+  document.getElementById('contactForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const firstName = document.getElementById('contactFirstName').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const message = document.getElementById('contactMessage').value.trim();
+    const errEl = document.getElementById('contactError');
+
+    if (!firstName || !email || !message) {
+      errEl.textContent = 'Please fill in all required fields.';
+      errEl.classList.add('show');
+      return;
+    }
+    errEl.classList.remove('show');
+    Toast.show('Message sent! We\'ll get back to you soon. 📩', 'success');
+    e.target.reset();
+  });
+
+  document.addEventListener('DOMContentLoaded', loadFeaturedRecipes);
+</script>
+</body>
+</html>
